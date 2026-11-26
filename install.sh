@@ -3,17 +3,19 @@ set -Eeuo pipefail
 
 git clone https://github.com/Blobby-Boi/BlobeVM
 cd BlobeVM
-pip install textual
-python3 installer.py
+sudo apt update
+sudo apt install -y jq python3-venv
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install textual
+python installer.py
+deactivate
 if [[ ! -s options.json ]]; then
     echo "Installation options were not saved; select Install NOW in the installer and try again." >&2
     exit 1
 fi
 docker build -t blobevm . --no-cache
 cd ..
-
-sudo apt update
-sudo apt install -y jq
 
 mkdir -p Save
 cp -r BlobeVM/root/config/* Save
